@@ -26,3 +26,38 @@ li {
   max-width: 1200px;
   width: 100%;
 }
+
+.row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.column {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+
+.button {
+  background: #0a0a0a;
+  border: none;
+  border-radius: 3px;
+  color: #e6e6e6;
+  display: block;
+  font-size: 16px;
+  margin: 10px auto;
+  padding: 7px 0;
+  text-align: center;
+  width: 200px;
+}
+
+.button:hover:enabled {
+  background: linear-gradient(#1a1a1a, #0a0a0a);
+  color: #fff;
+  text-decoration: none;
+}
+
+.button:active {
+  transform: translateY(1px);
+}
