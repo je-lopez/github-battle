@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
-import Nav from './components/Nav';
-import Home from './components/Home';
-import Battle from './components/Battle';
-import Results from './components/Results';
-import Popular from './components/Popular';
+import Nav from './Nav';
+import Home from './Home';
+import Battle from './Battle';
+import Results from './Results';
+import Popular from './Popular';
+
+import './index.css';
 
 class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div>
+        <div className='container'>
           <Nav />
           <Switch>
             <Route exact path='/' component={Home} />
