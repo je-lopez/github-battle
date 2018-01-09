@@ -1,95 +1,55 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import * as actions from '../../actions';
 
-import PlayerPreview from './PlayerPreview';
 import PlayerInput from './PlayerInput';
+import PlayerCard from '../PlayerCard';
 
-class Battle extends Component {
-  constructor(props) {
-    super(props);
+const Battle = props => {
+  const { players, match, resetPlayer } = props;
+  const positions = ['playerOne', 'playerTwo'];
 
-    this.state = {
-      playerOneName: '',
-      playerTwoName: '',
-      playerOneImage: null,
-      playerTwoImage: null
-    };
+  return [
+    <div key='players' className='row'>
+      {Object.keys(players).map((player, i) => {
+        const { username, avatar_url, label, name } = players[player];
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleReset = this.handleReset.bind(this);
-  }
-
-  handleSubmit(id, username) {
-    this.setState(() => {
-      const newState = {};
-
-      newState[id + 'Name'] = username;
-      newState[id + 'Image'] = `https://github.com/${username}.png?size=200`;
-
-      return newState;
-    });
-  }
-
-  handleReset(id) {
-    this.setState(() => {
-      const newState = {};
-
-      newState[id + 'Name'] = '';
-      newState[id + 'Image'] = null;
-
-      return newState;
-    });
-  }
-
-  render() {
-    const match = this.props.match;
-    const { playerOneName, playerTwoName } = this.state;
-    const { playerOneImage, playerTwoImage } = this.state;
-
-    return (
-      <div>
-        <div className='row'>
-          {!playerOneName ?
-            <PlayerInput
-              id='playerOne'
-              label='Player One'
-              onSubmit={this.handleSubmit}
-            /> :
-            <PlayerPreview
-              avatar={playerOneImage}
-              username={playerOneName}
-              id='playerOne'
-              onReset={this.handleReset}
-           />}
-
-          {!playerTwoName ?
-            <PlayerInput
-              id='playerTwo'
-              label='Player Two'
-              onSubmit={this.handleSubmit}
-            /> :
-            <PlayerPreview
-              avatar={playerTwoImage}
-              username={playerTwoName}
-              id='playerTwo'
-              onReset={this.handleReset}
-            />}
-        </div>
-
-        {playerOneImage && playerTwoImage &&
-          <Link
-            className='button'
-            to={{
-              pathname: `${match.url}/results`,
-              search: `?playerOneName=${playerOneName}&playerTwoName=${playerTwoName}`
-            }}
+        return !avatar_url ?
+          <PlayerInput
+            key={i}
+            player={positions[i]}
+            label={label}
+          /> :
+          <PlayerCard
+            key={i}
+            avatar={avatar_url}
+            username={username}
+            heading={name}
           >
-            Battle
-          </Link>
-        }
-      </div>
-    )
-  }
+            <button
+              className='reset'
+              onClick={() => resetPlayer(positions[i])}
+            >
+              Reset
+            </button>
+          </PlayerCard>
+      })}
+    </div>,
+
+    players.playerOne.score && players.playerTwo.score &&
+      <Link
+        key='battle'
+        className='button'
+        to={{ pathname: `${match.url}/results` }}
+      >
+        Battle
+      </Link>
+  ];
 }
 
-export default Battle;
+function mapStateToProps({ players }) {
+  return { players }
+}
+
+export default connect(mapStateToProps, actions)(Battle);
